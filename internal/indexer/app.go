@@ -41,6 +41,7 @@ func (app *App) Run(ctx context.Context) error {
 	rangeChan := make(chan RangeJob, 20)
 	parseChan := make(chan ParseJob, 20)
 	saveChan := make(chan SaveJob, 20)
+	orderedSaveChan := make(chan SaveJob, 20)
 
 	rootG.Go(func() error {
 		defer close(rangeChan)
@@ -67,6 +68,11 @@ func (app *App) Run(ctx context.Context) error {
 			})
 		}
 		return parseG.Wait()
+	})
+
+	rootG.Go(func() error {
+		defer close(orderedSaveChan)
+		return app.sequencer(ctx, saveChan, orderedSaveChan)
 	})
 
 	return rootG.Wait()

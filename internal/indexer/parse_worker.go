@@ -22,6 +22,7 @@ func (app *App) parseWorker(ctx context.Context, parseChan <-chan ParseJob, save
 				return nil
 			}
 			var events []VaultEvent
+			app.logger.Info("Parsing logs", "fromBlock", job.FromBlock, "toBlock", job.ToBlock)
 
 			for _, log := range job.Logs {
 				timestamp, ok := job.BlockTimestamps[log.BlockNumber]
