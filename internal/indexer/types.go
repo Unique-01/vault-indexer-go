@@ -15,7 +15,10 @@ type VaultEvent struct {
 	BlockNumber   uint64
 	TimeStamp     time.Time
 	EventType     string
-	Amount        *big.Int
+
+	Amount         *big.Int
+	PreviousAmount *big.Int
+	NewAmount      *big.Int
 }
 
 type RangeJob struct {
@@ -25,7 +28,8 @@ type RangeJob struct {
 
 type ParseJob struct {
 	RangeJob
-	Logs []types.Log
+	Logs            []types.Log
+	BlockTimestamps map[uint64]time.Time
 }
 
 type SaveJob struct {

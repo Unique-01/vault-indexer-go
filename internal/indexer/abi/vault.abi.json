@@ -1,0 +1,298 @@
+[
+    {
+        "type": "function",
+        "name": "balances",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "cancelPendingWithdrawal",
+        "inputs": [],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "claimPendingWithdrawal",
+        "inputs": [],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "deposit",
+        "inputs": [],
+        "outputs": [],
+        "stateMutability": "payable"
+    },
+    {
+        "type": "function",
+        "name": "getBalance",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getPendingWithdrawal",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "requestTime",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "unlockTime",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "timeLeft",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "lastWithdrawalCancelTime",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "modifyPendingWithdrawal",
+        "inputs": [
+            {
+                "name": "_newAmount",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "pendingWithdrawals",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "requestWithdrawal",
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "withdrawalCancelDelay",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "withdrawalLockedPeriod",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "withdrawalRequestTime",
+        "inputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "event",
+        "name": "UserCancelledPendingWithdrawal",
+        "inputs": [
+            {
+                "name": "user",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UserDeposited",
+        "inputs": [
+            {
+                "name": "user",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UserModifiedPendingWithdrawal",
+        "inputs": [
+            {
+                "name": "user",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "previousAmount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "newAmount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UserRequestedWithdrawal",
+        "inputs": [
+            {
+                "name": "user",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "requestTime",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "UserWithdrawn",
+        "inputs": [
+            {
+                "name": "user",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "error",
+        "name": "ReentrancyGuardReentrantCall",
+        "inputs": []
+    }
+]

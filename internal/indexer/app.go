@@ -2,8 +2,10 @@ package indexer
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/unique-01/vault-indexer-go/internal/config"
 	"golang.org/x/sync/errgroup"
@@ -14,24 +16,31 @@ type App struct {
 	blockchain   BlockchainClient
 	store        Store
 	vaultAddress common.Address
+	contractABI  abi.ABI
 }
 
-func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, store Store) *App {
-
+func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, store Store) (*App, error) {
+	contractABI, err := loadVaultABI()
+	if err != nil {
+		return nil, fmt.Errorf("load vault Abi: %w", err)
+	}
 	return &App{
 		logger:       logger,
 		blockchain:   blockchain,
 		store:        store,
 		vaultAddress: cfg.VaultAddress,
-	}
+		contractABI:  contractABI,
+	}, nil
 }
 
 func (app *App) Run(ctx context.Context) error {
 	rootG, ctx := errgroup.WithContext(ctx)
 
 	const batchSize uint64 = 10
+
 	rangeChan := make(chan RangeJob, 20)
 	parseChan := make(chan ParseJob, 20)
+	saveChan := make(chan SaveJob, 20)
 
 	rootG.Go(func() error {
 		defer close(rangeChan)
@@ -47,6 +56,17 @@ func (app *App) Run(ctx context.Context) error {
 			})
 		}
 		return fetchG.Wait()
+	})
+
+	rootG.Go(func() error {
+		defer close(saveChan)
+		parseG, parseCtx := errgroup.WithContext(ctx)
+		for range 3 {
+			parseG.Go(func() error {
+				return app.parseWorker(parseCtx, parseChan, saveChan)
+			})
+		}
+		return parseG.Wait()
 	})
 
 	return rootG.Wait()
