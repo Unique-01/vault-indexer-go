@@ -6,5 +6,5 @@ import (
 
 type Store interface {
 	GetLastIndexedBlock(ctx context.Context) (uint64, error)
-	SaveVaultEvents(ctx context.Context, events []VaultEvent) error
+	SaveRange(ctx context.Context, toBlock uint64, events []VaultEvent) error
 }

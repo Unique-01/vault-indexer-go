@@ -20,7 +20,7 @@ func main() {
 
 	cfg, err := config.Load()
 	if err != nil {
-		logger.Error("config error", err)
+		logger.Error("config", "error", err)
 	}
 
 	ethClient, err := ethclient.Dial(cfg.RpcUrl)

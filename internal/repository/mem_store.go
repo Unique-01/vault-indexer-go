@@ -21,11 +21,12 @@ func (store *MemStore) GetLastIndexedBlock(ctx context.Context) (uint64, error) 
 	return store.lastBlock, nil
 }
 
-func (store *MemStore) SaveVaultEvents(ctx context.Context, events []indexer.VaultEvent) error {
+func (store *MemStore) SaveRange(ctx context.Context, toBlock uint64, events []indexer.VaultEvent) error {
 	store.mu.Lock()
 	defer store.mu.Unlock()
 
 	store.events = append(store.events, events...)
+	store.lastBlock = toBlock
 
 	return nil
 
