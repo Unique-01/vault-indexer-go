@@ -22,7 +22,7 @@ func (app *App) parseWorker(ctx context.Context, parseChan <-chan ParseJob, save
 				return nil
 			}
 			var events []VaultEvent
-			app.logger.Info("Parsing logs", "fromBlock", job.FromBlock, "toBlock", job.ToBlock)
+			// app.logger.Info("Parsing logs", "fromBlock", job.FromBlock, "toBlock", job.ToBlock)
 
 			for _, log := range job.Logs {
 				timestamp, ok := job.BlockTimestamps[log.BlockNumber]
@@ -139,6 +139,7 @@ func buildVaultEvent(eventName string, merged map[string]any, log types.Log, tim
 		}
 		baseEvent.PreviousAmount = prevAmount
 		baseEvent.NewAmount = newAmount
+	case "UserCancelledPendingWithdrawal":
 	default:
 		return VaultEvent{}, fmt.Errorf("unhandled event type: %s", eventName)
 	}

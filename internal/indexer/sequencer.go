@@ -30,7 +30,7 @@ func (app *App) sequencer(ctx context.Context, saveChan <-chan SaveJob, orderedS
 				if !found {
 					break
 				}
-				app.logger.Info("Sequencing", "fromBlock", readyJob.FromBlock, "toBlock", readyJob.ToBlock)
+				// app.logger.Info("Sequencing", "fromBlock", readyJob.FromBlock, "toBlock", readyJob.ToBlock)
 				select {
 				case <-ctx.Done():
 					return ctx.Err()

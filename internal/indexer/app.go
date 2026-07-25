@@ -75,6 +75,10 @@ func (app *App) Run(ctx context.Context) error {
 		return app.sequencer(ctx, saveChan, orderedSaveChan)
 	})
 
+	rootG.Go(func() error {
+		return app.saveWorker(ctx, orderedSaveChan)
+	})
+
 	return rootG.Wait()
 
 }

@@ -25,7 +25,7 @@ func (app *App) fetchWorker(ctx context.Context, rangeChan <-chan RangeJob, pars
 			if !ok {
 				return nil
 			}
-			app.logger.Info("Fetching logs", "fromBlock", job.FromBlock, "toBlock", job.ToBlock)
+			// app.logger.Info("Fetching logs", "fromBlock", job.FromBlock, "toBlock", job.ToBlock)
 			logs, err := app.fetchLogsWithRetry(ctx, job)
 			if err != nil {
 				return fmt.Errorf("Fetch Worker failed: range %d -> %d: %w", job.FromBlock, job.ToBlock, err)
