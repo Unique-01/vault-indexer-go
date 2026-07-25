@@ -3,9 +3,10 @@ package indexer
 import (
 	"context"
 	"fmt"
+	"time"
 )
 
-func (app *App) rangeProducer(ctx context.Context, rangeChan chan<- RangeJob, batchSize uint64) error {
+func (app *App) rangeProducer(ctx context.Context, rangeChan chan<- RangeJob, batchSize uint64, pollInterval time.Duration) error {
 	for {
 
 		lastIndexed, err := app.store.GetLastIndexedBlock(ctx)
@@ -32,7 +33,10 @@ func (app *App) rangeProducer(ctx context.Context, rangeChan chan<- RangeJob, ba
 			}
 
 		}
-		// Implement waiting interval
-
+		select {
+		case <-time.After(pollInterval):
+		case <-ctx.Done():
+			return ctx.Err()
+		}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
@@ -17,6 +18,8 @@ type App struct {
 	store        Store
 	vaultAddress common.Address
 	contractABI  abi.ABI
+	pollInterval time.Duration
+	batchSize    uint64
 }
 
 func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, store Store) (*App, error) {
@@ -30,13 +33,13 @@ func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, s
 		store:        store,
 		vaultAddress: cfg.VaultAddress,
 		contractABI:  contractABI,
+		pollInterval: cfg.PollInterval,
+		batchSize:    cfg.BatchSize,
 	}, nil
 }
 
 func (app *App) Run(ctx context.Context) error {
 	rootG, ctx := errgroup.WithContext(ctx)
-
-	const batchSize uint64 = 10
 
 	rangeChan := make(chan RangeJob, 20)
 	parseChan := make(chan ParseJob, 20)
@@ -45,7 +48,7 @@ func (app *App) Run(ctx context.Context) error {
 
 	rootG.Go(func() error {
 		defer close(rangeChan)
-		return app.rangeProducer(ctx, rangeChan, batchSize)
+		return app.rangeProducer(ctx, rangeChan, app.batchSize, app.pollInterval)
 	})
 
 	rootG.Go(func() error {
