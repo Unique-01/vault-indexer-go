@@ -15,6 +15,7 @@ type Config struct {
 	VaultAddress common.Address
 	BatchSize    uint64
 	PollInterval time.Duration
+	APIAddr      string
 }
 
 func Load() (*Config, error) {
@@ -35,6 +36,7 @@ func Load() (*Config, error) {
 		VaultAddress: common.HexToAddress(os.Getenv("VAULT_ADDRESS")),
 		BatchSize:    batchSize,
 		PollInterval: pollInterval,
+		APIAddr:      os.Getenv("HTTP_ADDR"),
 	}
 
 	return cfg, nil

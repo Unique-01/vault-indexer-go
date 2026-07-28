@@ -112,7 +112,7 @@ func buildVaultEvent(eventName string, merged map[string]any, log types.Log, tim
 		LogIndex:    log.Index,
 		BlockNumber: log.BlockNumber,
 		TimeStamp:   timestamp,
-		EventType:   eventName,
+		EventType:   EventType(eventName),
 	}
 
 	user, ok := merged["user"].(common.Address)

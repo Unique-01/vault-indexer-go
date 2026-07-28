@@ -8,13 +8,23 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
+type EventType string
+
+const (
+	EventUserDeposited                  EventType = "UserDeposited"
+	EventUserRequestedWithdrawal        EventType = "UserRequestedWithdrawal"
+	EventUserWithdrawn                  EventType = "UserWithdrawn"
+	EventUserModifiedPendingWithdrawal  EventType = "UserModifiedPendingWithdrawal"
+	EventUserCancelledPendingWithdrawal EventType = "UserCancelledPendingWithdrawal"
+)
+
 type VaultEvent struct {
 	WalletAddress common.Address
 	TxHash        common.Hash
 	LogIndex      uint
 	BlockNumber   uint64
 	TimeStamp     time.Time
-	EventType     string
+	EventType     EventType
 
 	Amount         *big.Int
 	PreviousAmount *big.Int
