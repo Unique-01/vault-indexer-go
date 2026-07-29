@@ -4,6 +4,7 @@ go 1.26.4
 
 require (
 	github.com/ethereum/go-ethereum v1.17.4
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/joho/godotenv v1.5.1
 	github.com/spruceid/siwe-go v0.2.1
 	golang.org/x/sync v0.19.0
