@@ -39,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	apiServer := api.New(logger, cfg.APIAddr)
+	apiServer := api.New(logger, cfg.APIAddr, vaultStore)
 
 	g, ctx := errgroup.WithContext(ctx)
 

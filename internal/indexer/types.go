@@ -18,6 +18,16 @@ const (
 	EventUserCancelledPendingWithdrawal EventType = "UserCancelledPendingWithdrawal"
 )
 
+func (e EventType) Valid() bool {
+	switch e {
+	case EventUserDeposited, EventUserRequestedWithdrawal, EventUserWithdrawn,
+		EventUserModifiedPendingWithdrawal, EventUserCancelledPendingWithdrawal:
+		return true
+	default:
+		return false
+	}
+}
+
 type VaultEvent struct {
 	WalletAddress common.Address
 	TxHash        common.Hash

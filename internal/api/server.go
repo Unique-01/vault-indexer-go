@@ -10,12 +10,14 @@ import (
 type Server struct {
 	logger *slog.Logger
 	addr   string
+	store  EventReader
 }
 
-func New(logger *slog.Logger, addr string) *Server {
+func New(logger *slog.Logger, addr string, store EventReader) *Server {
 	return &Server{
 		logger: logger,
 		addr:   addr,
+		store:  store,
 	}
 }
 
