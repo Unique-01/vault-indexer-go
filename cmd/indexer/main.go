@@ -9,6 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/unique-01/vault-indexer-go/internal/api"
+	"github.com/unique-01/vault-indexer-go/internal/auth"
 	"github.com/unique-01/vault-indexer-go/internal/config"
 	"github.com/unique-01/vault-indexer-go/internal/indexer"
 	"github.com/unique-01/vault-indexer-go/internal/repository"
@@ -26,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	ethClient, err := ethclient.Dial(cfg.RpcUrl)
+	ethClient, err := ethclient.Dial(cfg.RPCUrl)
 	if err != nil {
 		logger.Error("Error connecting to evm node", "error", err)
 		os.Exit(1)
@@ -39,7 +40,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	apiServer := api.New(logger, cfg.APIAddr, vaultStore)
+	authService := auth.NewService(vaultStore, cfg.JwtSecret, cfg.TokenExpiry, cfg.SiweDomain, cfg.SiweURI, cfg.ChainID)
+
+	apiServer := api.New(logger, cfg.APIAddr, vaultStore, authService)
 
 	g, ctx := errgroup.WithContext(ctx)
 

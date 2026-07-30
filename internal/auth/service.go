@@ -10,7 +10,7 @@ import (
 )
 
 type Service struct {
-	nonceStore  NonceStore
+	store       Store
 	jwtSecret   []byte
 	tokenExpiry time.Duration
 	domain      string
@@ -18,9 +18,9 @@ type Service struct {
 	chainId     int
 }
 
-func NewService(nonceStore NonceStore, jwtSecret []byte, tokenExpiry time.Duration, domain, uri string, chainId int) *Service {
+func NewService(Store Store, jwtSecret []byte, tokenExpiry time.Duration, domain, uri string, chainId int) *Service {
 	return &Service{
-		nonceStore:  nonceStore,
+		store:       Store,
 		jwtSecret:   jwtSecret,
 		tokenExpiry: tokenExpiry,
 		domain:      domain,
@@ -31,16 +31,17 @@ func NewService(nonceStore NonceStore, jwtSecret []byte, tokenExpiry time.Durati
 
 func (service *Service) IssueChallenge(ctx context.Context, wallet common.Address) (string, error) {
 	nonce := siwe.GenerateNonce()
-	if err := service.nonceStore.SaveNonce(ctx, wallet, nonce); err != nil {
-		return "", fmt.Errorf("save nonce: %w", err)
-	}
 
 	message, err := service.buildMessage(wallet, nonce)
 	if err != nil {
 		return "", fmt.Errorf("build message: %w", err)
 	}
+	challengeText := message.String()
+	if err := service.store.SaveChallenge(ctx, wallet, challengeText); err != nil {
+		return "", fmt.Errorf("save challenge: %w", err)
+	}
 
-	return message.String(), nil
+	return challengeText, nil
 }
 
 func (service *Service) buildMessage(wallet common.Address, nonce string) (*siwe.Message, error) {
@@ -49,7 +50,7 @@ func (service *Service) buildMessage(wallet common.Address, nonce string) (*siwe
 		wallet.Hex(),
 		service.uri,
 		nonce,
-		map[string]interface{}{
+		map[string]any{
 			"chainId":   service.chainId,
 			"statement": "Sign in to Vault Indexer",
 		},

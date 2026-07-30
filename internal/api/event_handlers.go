@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/unique-01/vault-indexer-go/internal/indexer"
 )
 
@@ -17,15 +16,13 @@ func (server *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 func (server *Server) handleListEvents(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
-	walletParam := query.Get("walletAddress")
-	if !common.IsHexAddress(walletParam) {
-		http.Error(w, "missing or invalid wallet address", http.StatusBadRequest)
-		return
+	wallet, ok := walletFromContext(r.Context())
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	}
-	walletAddress := common.HexToAddress(walletParam)
 
 	filter := EventFilter{
-		WalletAddress: walletAddress,
+		WalletAddress: wallet,
 	}
 
 	if eventTypeParam := query.Get("eventType"); eventTypeParam != "" {

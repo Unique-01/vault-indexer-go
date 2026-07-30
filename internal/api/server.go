@@ -5,19 +5,23 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/unique-01/vault-indexer-go/internal/auth"
 )
 
 type Server struct {
 	logger *slog.Logger
 	addr   string
 	store  EventReader
+	auth   *auth.Service
 }
 
-func New(logger *slog.Logger, addr string, store EventReader) *Server {
+func New(logger *slog.Logger, addr string, store EventReader,auth *auth.Service) *Server {
 	return &Server{
 		logger: logger,
 		addr:   addr,
 		store:  store,
+		auth: auth,
 	}
 }
 
