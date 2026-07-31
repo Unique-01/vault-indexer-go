@@ -21,6 +21,7 @@ type Config struct {
 	SiweDomain   string
 	SiweURI      string
 	ChainID      int
+	DatabaseUrl  string
 }
 
 func Load() (*Config, error) {
@@ -64,6 +65,7 @@ func Load() (*Config, error) {
 		SiweDomain:   os.Getenv("SIWE_DOMAIN"),
 		SiweURI:      os.Getenv("SIWE_URI"),
 		ChainID:      chainID,
+		DatabaseUrl:  os.Getenv("DATABASE_URL"),
 	}, nil
 }
 
