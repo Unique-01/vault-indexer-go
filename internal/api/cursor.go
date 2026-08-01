@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 )
 
@@ -24,10 +25,14 @@ func DecodeCursor(s string) (Cursor, error) {
 		blockNumber uint64
 		logIndex    uint
 	)
-	_, err = fmt.Scanf(string(raw), "%d:%d", &blockNumber, &logIndex)
+	_, err = fmt.Sscanf(string(raw), "%d:%d", &blockNumber, &logIndex)
 	if err != nil {
 		return Cursor{}, fmt.Errorf("invalid cursor format: %w", err)
 	}
 
 	return Cursor{BlockNumber: blockNumber, LogIndex: logIndex}, nil
+}
+
+func (c Cursor) MarshalJSON() ([]byte, error) {
+	return json.Marshal(EncodeCursor(c))
 }

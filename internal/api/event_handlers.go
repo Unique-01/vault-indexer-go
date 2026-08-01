@@ -19,6 +19,7 @@ func (server *Server) handleListEvents(w http.ResponseWriter, r *http.Request) {
 	wallet, ok := walletFromContext(r.Context())
 	if !ok {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 
 	filter := EventFilter{
