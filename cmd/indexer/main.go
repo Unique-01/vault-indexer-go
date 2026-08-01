@@ -32,7 +32,12 @@ func main() {
 		logger.Error("Error connecting to evm node", "error", err)
 		os.Exit(1)
 	}
-	vaultStore := repository.NewMemStore()
+	// vaultStore := repository.NewMemStore()
+	vaultStore, err := repository.NewPostgresStore(ctx, cfg.DatabaseUrl)
+	if err != nil {
+		logger.Error("Error creating new postgres store", "error", err)
+		os.Exit(1)
+	}
 
 	indexerApp, err := indexer.New(cfg, logger, ethClient, vaultStore)
 	if err != nil {
