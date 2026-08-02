@@ -1,0 +1,49 @@
+services:
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    entrypoint: ["anvil", "--host", "0.0.0.0"]
+    ports:
+      - "8545:8545"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: unic
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: vault_indexer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unic -d vault_indexer"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  indexer:
+    build:
+      context: .
+      args:
+        BINARY: indexer
+    env_file: .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      anvil:
+        condition: service_started
+
+  api:
+    build:
+      context: .
+      args:
+        BINARY: api
+    env_file: .env.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
