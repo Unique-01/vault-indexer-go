@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,11 +12,10 @@ import (
 )
 
 func main() {
-	logger := slog.Default()
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	cfg, vaultStore, err := bootstrap.Init(ctx)
+	cfg, logger, vaultStore, err := bootstrap.Init(ctx)
 	if err != nil {
 		logger.Error("bootstrap failed", "error", err)
 		os.Exit(1)

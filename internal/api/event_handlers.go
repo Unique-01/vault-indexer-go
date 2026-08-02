@@ -14,6 +14,7 @@ func (server *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *Server) handleListEvents(w http.ResponseWriter, r *http.Request) {
+	logger := loggerFromContext(r.Context())
 	query := r.URL.Query()
 
 	wallet, ok := walletFromContext(r.Context())
@@ -55,13 +56,13 @@ func (server *Server) handleListEvents(w http.ResponseWriter, r *http.Request) {
 
 	page, err := server.store.ListEvents(r.Context(), filter)
 	if err != nil {
-		server.logger.Error("list events failed", "error", err)
+		logger.Error("list events failed", "error", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err = json.NewEncoder(w).Encode(page); err != nil {
-		server.logger.Error("encode response failed", "error", err)
+		logger.Error("encode response failed", "error", err)
 	}
 }
