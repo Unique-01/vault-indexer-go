@@ -27,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	indexerApp, err := indexer.New(cfg, logger, ethClient, vaultStore)
+	indexerApp, err := indexer.New(cfg, logger, ethClient, vaultStore, indexer.SleepFunc)
 	if err != nil {
 		logger.Error("app initialization error", "error", err)
 		os.Exit(1)

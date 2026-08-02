@@ -12,6 +12,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+type sleepFunc func(ctx context.Context, d time.Duration) error
 type App struct {
 	logger       *slog.Logger
 	blockchain   BlockchainClient
@@ -20,9 +21,10 @@ type App struct {
 	contractABI  abi.ABI
 	pollInterval time.Duration
 	batchSize    uint64
+	sleep        sleepFunc
 }
 
-func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, store Store) (*App, error) {
+func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, store Store, sleep sleepFunc) (*App, error) {
 	contractABI, err := loadVaultABI()
 	if err != nil {
 		return nil, fmt.Errorf("load vault Abi: %w", err)
@@ -35,6 +37,7 @@ func New(cfg *config.Config, logger *slog.Logger, blockchain BlockchainClient, s
 		contractABI:  contractABI,
 		pollInterval: cfg.PollInterval,
 		batchSize:    cfg.BatchSize,
+		sleep:        sleep,
 	}, nil
 }
 

@@ -36,8 +36,8 @@ func (app *App) fetchWorker(ctx context.Context, rangeChan <-chan RangeJob, pars
 			}
 			select {
 			case parseChan <- ParseJob{
-				RangeJob:       job,
-				Logs:           logs,
+				RangeJob:        job,
+				Logs:            logs,
 				BlockTimestamps: blockTimeStamps,
 			}:
 			case <-ctx.Done():
@@ -127,16 +127,10 @@ func (app *App) withRetry(ctx context.Context, fn func() error) error {
 			jitter := time.Duration(rand.IntN(500)) * time.Millisecond
 			delay := time.Second * time.Duration(1<<attempt)
 
-			timer := time.NewTimer(delay + jitter)
-
-			select {
-			case <-ctx.Done():
-				timer.Stop()
-				return fmt.Errorf("context cancelled during retry: %w", ctx.Err())
-			case <-timer.C:
+			if err := app.sleep(ctx, jitter+delay); err != nil {
+				return fmt.Errorf("context cancelled during retry: %w", err)
 			}
 		}
-
 	}
 	return fmt.Errorf("max tries exceeded error: %w", lastErr)
 }
